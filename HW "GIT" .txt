@@ -1,0 +1,57 @@
+495  cd Desktop
+  496  mkdir cursor_git
+  497  cd cursor_git/
+  498  touch first.py
+  499  git status
+  500  git remote add origin git@github.com:Terbushka/Cursor_Advansed_HW.git
+  501  git init
+  502  git remote add origin git@github.com:Terbushka/Cursor_Advansed_HW.git
+  503  git status
+  504  git push -u origin main
+  505  ls -l
+  506  ls -a
+  507  git add first.py 
+  508  git commit -m 'adding first.py'
+  509  git log
+  510  touch second.py
+  511  git add second.py 
+  512  git commit -m 'adding second.py'
+  513  rm first.py 
+  514  ls -l
+  515   git commit -m 'removing first.py'
+  516  git add first.py 
+  517  git commit -m 'removing first.py'
+  518  git log
+  519  git push
+  520  git push --set-upstream origin master
+  521  git push --set-upstream origin master
+  522  git push --set-upstream origin master
+  523  git push --set-upstream origin master
+  524   git branch first
+  525  git branch second
+  526  git branch 
+  527   git checkout second 
+  528  echo 'print("Hello")' > second.py 
+  529  git stash 
+  530  git checkout first 
+  531  git checkout second 
+  532  git stash pop
+  533  git add 
+  534  git add second.py 
+  535  git commit -m 'Changing second.py'
+  536   git push 
+  537  git push --set-upstream origin second 
+  538    git checkout first 
+  539  echo 'print("Cursor")' > second.py 
+  540   git add second.py 
+  541  git commit -m 'Changing second.py'
+  542   git push --set-upstream origin first 
+  543  git checkout master 
+  544  git merge second 
+  545   git merge first 
+  546  open -a "Sublime Text" second.py 
+  547  cat second.py 
+  548  git add second.py 
+  549   git commit -m 'Merging files from first and second branch'
+  550  git push
+  551  history 
