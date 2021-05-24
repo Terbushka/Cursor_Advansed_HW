@@ -1,0 +1,112 @@
+Insert dump of shop.sql to your local database
+sudo mysql -u root --password= shop < shop.sql
+
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| my_items           |
+| mysql              |
+| performance_schema |
+| shop               |
+| sys                |
++--------------------+
+
+Modify table products add user_id as foreign key
+mysql> USE shop;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> SHOW TABLES;
++---------------------+
+| Tables_in_shop      |
++---------------------+
+| categories          |
+| categories_products |
+| product_images      |
+| products            |
+| users               |
++---------------------+
+5 rows in set (0,01 sec)
+
+mysql> SHOW COLUMNS FROM products;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| title       | varchar(255) | NO   |     | NULL    |                |
+| meta_title  | char(255)    | YES  |     | NULL    |                |
+| description | varchar(400) | YES  |     | NULL    |                |
+| price       | double       | NO   |     | NULL    |                |
+| old_price   | double       | YES  |     | NULL    |                |
+| is_active   | tinyint(1)   | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+7 rows in set (0,01 sec)
+
+mysql> ALTER TABLE products ADD COLUMN user_id INT NOT NULL;
+Query OK, 0 rows affected (0,06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SHOW COLUMNS FROM products;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| title       | varchar(255) | NO   |     | NULL    |                |
+| meta_title  | char(255)    | YES  |     | NULL    |                |
+| description | varchar(400) | YES  |     | NULL    |                |
+| price       | double       | NO   |     | NULL    |                |
+| old_price   | double       | YES  |     | NULL    |                |
+| is_active   | tinyint(1)   | YES  |     | NULL    |                |
+| user_id     | int          | NO   |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+8 rows in set (0,01 sec)
+
+mysql> UPDATE products set user_id=1;
+Query OK, 1 row affected (0,01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> ALTER TABLE products ADD FOREIGN KEY (user_id) REFERENCES users(id);
+Query OK, 1 row affected (0,14 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> SHOW COLUMNS FROM products;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| title       | varchar(255) | NO   |     | NULL    |                |
+| meta_title  | char(255)    | YES  |     | NULL    |                |
+| description | varchar(400) | YES  |     | NULL    |                |
+| price       | double       | NO   |     | NULL    |                |
+| old_price   | double       | YES  |     | NULL    |                |
+| is_active   | tinyint(1)   | YES  |     | NULL    |                |
+| user_id     | int          | NO   | MUL | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+8 rows in set (0,00 sec)
+
+
+Select users their products, collections and images and write this query to file.
+
+mysql> SELECT u.first_name, u.last_name, p.title as product_title, p.price, c.title as category_title, pi.file 
+FROM users u JOIN products p on p.user_id=u.id 
+JOIN categories_products cp on cp.product_id=p.id 
+JOIN categories c on c.id=cp.category_id 
+JOIN product_images pi on pi.product_id=p.id;
++------------+-----------+---------------+----------+----------------+------------------------------------------------------------------------------------+
+| first_name | last_name | product_title | price    | category_title | file                                                                               |
++------------+-----------+---------------+----------+----------------+------------------------------------------------------------------------------------+
+| Liubomyr   | Luzhnyi   | Rolex         | 14000.25 | Watch          | https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg   |
+| Liubomyr   | Luzhnyi   | Rolex         | 14000.25 | Watch          | 11https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg |
+| Liubomyr   | Luzhnyi   | Rolex         | 14000.25 | Watch          | 2https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg  |
++------------+-----------+---------------+----------+----------------+------------------------------------------------------------------------------------+
+3 rows in set (0,00 sec)
+
+mysql -u root -p shop -e "SELECT u.first_name, u.last_name, p.title as product_title, p.price, c.title as category_title, pi.file 
+FROM users u JOIN products p on p.user_id=u.id JOIN categories_products cp on cp.product_id=p.id 
+JOIN categories c on c.id=cp.category_id JOIN product_images pi on pi.product_id=p.id" > user_products.txt
+
+sudo mysqldump -u root --password= shop > shop_hw.sql
